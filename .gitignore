@@ -6,3 +6,8 @@
 /pkg/
 /spec/reports/
 /tmp/
+
+test/dummy/log/
+test/dummy/tmp/
+*.sqlite3*
+.byebug_history
