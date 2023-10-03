@@ -11,3 +11,4 @@ test/dummy/log/
 test/dummy/tmp/
 *.sqlite3*
 .byebug_history
+gemfiles/*.lock
