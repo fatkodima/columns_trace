@@ -75,6 +75,13 @@ module ColumnsTrace
         end
     end
 
+    # Enables integration with Sidekiq, which is disabled by default.
+    #
+    def enable_sidekiq_tracing!
+      require_relative "columns_trace/sidekiq_integration"
+      true
+    end
+
     # A convenient method to configure this gem.
     #
     # @example

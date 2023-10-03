@@ -19,6 +19,20 @@ User.create!([
 
 Project.create!(name: "Ruby on Rails")
 
+# A hack to make server middleware work.
+# See https://github.com/sidekiq/sidekiq/wiki/Testing#testing-server-middleware.
+module Sidekiq
+  class << self
+    undef server?
+
+    def server?
+      true
+    end
+  end
+end
+
+ColumnsTrace.enable_sidekiq_tracing!
+
 module ActiveSupport
   class TestCase
     def capture_logging(&block)
