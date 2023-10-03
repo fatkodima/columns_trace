@@ -17,4 +17,9 @@ module ColumnsTrace
     before_action { Registry.clear }
     after_action { Reporter.report("#{self.class.name}##{action_name}") }
   end
+
+  ActiveSupport.on_load(:active_job) do
+    before_perform { Registry.clear }
+    after_perform { Reporter.report(self.class.name) }
+  end
 end
