@@ -1,34 +1,116 @@
 # ColumnsTrace
 
-TODO: Delete this and the text below, and describe your gem
+Detects unnecessary selected database columns in Rails controllers, `ActiveJob` and `Sidekiq` jobs.
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/columns_trace`. To experiment with that code, run `bin/console` for an interactive prompt.
+## Requirements
+
+- ruby 2.7+
+- rails 6.0+
 
 ## Installation
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
+Add this line to your application's Gemfile:
 
-Install the gem and add to the application's Gemfile by executing:
+```ruby
+gem 'columns_trace'
+```
 
-    $ bundle add UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG
+And then run:
 
-If bundler is not being used to manage dependencies, install the gem by executing:
-
-    $ gem install UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG
+```sh
+$ bundle install
+```
 
 ## Usage
 
-TODO: Write usage instructions here
+Hit a controller action or run `ActiveJob` (or `Sidekiq`) job, open `log/columns_trace.log`,
+and see the output:
+
+```
+ImportsController#create
+  1 User record: unused columns - "bio", "settings"; used columns - "id", "email", "name",
+  "account_id", "created_at", "updated_at"
+  ↳ app/controllers/application_controller.rb:32:in `block in <class:ApplicationController>'
+
+  1 Account record: unused columns - "settings", "logo", "updated_at";
+  used columns - "id", "plan_id"
+  ↳ app/controllers/application_controller.rb:33:in `block in <class:ApplicationController>'
+
+  10 Project records: unused columns - "description", "avatar", "url", "created_at", "updated_at";
+  used columns - "id", "user_id"
+  ↳ app/models/user.rb:46: in `projects'
+    app/services/imports_service.rb:129: in `import_projects'
+    app/controllers/imports_controller.rb:49:in `index'
+
+ImportProjectJob
+  1 User record: unused columns - "email", "name", "bio", "created_at", "updated_at";
+  used columns - "id", "settings"
+  ↳ app/jobs/import_project_job.rb:23:in `perform'
+
+  1 Project record: unused columns - "description", "avatar", "settings", "created_at",
+  "updated_at"; used columns - "id", "user_id", "url"
+  ↳ app/jobs/import_project_job.rb:24:in `perform'
+```
+
+## Configuration
+
+You can override the following default options:
+
+```ruby
+# config/initializers/columns_trace.rb
+
+ColumnsTrace.configure do |config|
+  # Configures models that will be ignored.
+  # Always adds Rails' internal `ActiveRecord::SchemaMigration`
+  # and `ActiveRecord::InternalMetadata` models by default.
+  config.ignored_models = []
+
+  # Configures columns that will be ignored.
+  #
+  # Global setting
+  #   config.ignored_columns = [:updated_at]
+  # Per-model setting
+  #   config.ignored_columns = [:updated_at, { User => :admin }]
+  config.ignored_columns = []
+
+  # The logger to log to.
+  # Defaults to logger, that outputs to `log/columns_trace.log` file
+  # when the gem is used in the Rails app.
+  config.logger = nil
+
+  # Controls the contents of the printed backtrace.
+  # Is set to the default Rails.backtrace_cleaner when the gem is used in the Rails app.
+  config.backtrace_cleaner = ->(backtrace) { backtrace }
+end
+```
+
+`Sidekiq` integration is disabled by default. You need to explicitly enable it:
+
+```ruby
+# config/initializers/columns_trace.rb
+
+ColumnsTrace.enable_sidekiq_tracing!
+```
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+After checking out the repo, run `bundle install` to install dependencies. Then, run `rake` to run the linter and tests.
 
 To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
+## Additional resources
+
+Alternatives:
+
+- [snip_snip](https://github.com/kddnewton/snip_snip) - archived, supports only controllers
+
+Interesting reads:
+
+- [Reasons why SELECT * is bad for SQL performance](https://tanelpoder.com/posts/reasons-why-select-star-is-bad-for-sql-performance/)
+
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/columns_trace.
+Bug reports and pull requests are welcome on GitHub at https://github.com/fatkodima/columns_trace.
 
 ## License
 
