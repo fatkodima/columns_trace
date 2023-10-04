@@ -1,5 +1,7 @@
 # ColumnsTrace
 
+[![Build Status](https://github.com/fatkodima/columns_trace/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/fatkodima/columns_trace/actions/workflows/test.yml)
+
 Detects unnecessary selected database columns in Rails controllers, `ActiveJob` and `Sidekiq` jobs.
 
 ## Requirements
