@@ -5,7 +5,9 @@ module ColumnsTrace
   class Railtie < Rails::Railtie
     initializer "columns_trace.set_configs" do
       ColumnsTrace.backtrace_cleaner = Rails.backtrace_cleaner
-      ColumnsTrace.logger = ActiveSupport::Logger.new(Rails.root.join("log", "columns_trace.log"))
+
+      logger = ActiveSupport::Logger.new(Rails.root.join("log", "columns_trace.log"))
+      ColumnsTrace.reporter = LogReporter.new(logger)
     end
   end
 end

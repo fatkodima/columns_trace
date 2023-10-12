@@ -38,7 +38,8 @@ module ActiveSupport
     def capture_logging(&block)
       out = StringIO.new
       logger = Logger.new(out)
-      ColumnsTrace.stub(:logger, logger, &block)
+      reporter = ColumnsTrace::LogReporter.new(logger)
+      ColumnsTrace.stub(:reporter, reporter, &block)
       out.string
     end
   end

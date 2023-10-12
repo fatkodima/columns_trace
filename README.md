@@ -75,10 +75,10 @@ ColumnsTrace.configure do |config|
   #   config.ignored_columns = [:updated_at, { User => :admin }]
   config.ignored_columns = []
 
-  # The logger to log to.
-  # Defaults to logger, that outputs to `log/columns_trace.log` file
-  # when the gem is used in the Rails app.
-  config.logger = nil
+  # The reporter that is used for reporting.
+  # Defaults to log reporter that outputs to `log/columns_trace.log` file
+  # when inside a Rails application.
+  config.reporter = nil
 
   # Controls the contents of the printed backtrace.
   # Is set to the default Rails.backtrace_cleaner when the gem is used in the Rails app.
@@ -92,6 +92,23 @@ end
 # config/initializers/columns_trace.rb
 
 ColumnsTrace.enable_sidekiq_tracing!
+```
+
+### Custom reporters
+
+By default offenses are reported to a log reporter that outputs to `log/columns_trace.log` file
+when inside a Rails application.
+
+You can set your custom reporter by defining a class responding to `#report` method.
+
+```ruby
+class MyReporter
+  def report(title, created_records)
+    # do actual reporting
+  end
+end
+
+ColumnsTrace.reporter = MyReporter.new
 ```
 
 ## Development
