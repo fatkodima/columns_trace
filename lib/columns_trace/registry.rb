@@ -4,18 +4,16 @@ module ColumnsTrace
   # @private
   # Note: can use ActiveSupport::IsolatedExecutionState instead of this module for rails 7.0+.
   module Registry
-    Entry = Struct.new(:model, :record, :backtrace)
-
     class << self
       def register(record, backtrace)
-        state << Entry.new(record.class, record, backtrace)
+        state << CreatedRecord.new(record, backtrace)
       end
 
       def clear
         state.clear
       end
 
-      def entries
+      def created_records
         state
       end
 

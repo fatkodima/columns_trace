@@ -2,9 +2,10 @@
 
 require "active_record"
 
+require_relative "columns_trace/created_record"
 require_relative "columns_trace/registry"
 require_relative "columns_trace/rails_integration"
-require_relative "columns_trace/reporter"
+require_relative "columns_trace/log_reporter"
 require_relative "columns_trace/version"
 require_relative "columns_trace/railtie" if defined?(Rails)
 
@@ -54,11 +55,11 @@ module ColumnsTrace
       end
     end
 
-    # Allows to set the logger.
-    # Defaults to logger, that outputs to `log/columns_trace.log` file
+    # Allows to set the reporter.
+    # Defaults to log reporter that outputs to `log/columns_trace.log` file
     # when inside a rails application.
     #
-    attr_accessor :logger
+    attr_accessor :reporter
 
     # @private
     attr_reader :backtrace_cleaner
