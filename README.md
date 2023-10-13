@@ -104,7 +104,15 @@ You can set your custom reporter by defining a class responding to `#report` met
 ```ruby
 class MyReporter
   def report(title, created_records)
-    # do actual reporting
+    title # => "controller#action"
+    created_records # => [#<ColumnsTrace::CreatedRecord>]
+    created_records.each do |record|
+      record.model # class of ActiveRecord model
+      record.accessed_fields  # array of accessed fields
+      record.unused_fields # array of unused fields
+      record.backtrace # array of strings
+      record.record # ActiveRecord model instance
+    end
   end
 end
 
