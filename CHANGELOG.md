@@ -1,5 +1,7 @@
 ## master (unreleased)
 
+  - Trace unused columns in mailers
+
 ## 0.2.0 (2023-10-13)
 
 - Allow to use custom reporters

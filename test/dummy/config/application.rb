@@ -4,6 +4,7 @@ require_relative "boot"
 
 require "rails"
 require "active_record/railtie"
+require "action_mailer/railtie"
 require "active_job/railtie"
 require "rails/test_unit/railtie"
 

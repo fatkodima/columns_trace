@@ -21,11 +21,27 @@ module ColumnsTrace
     end
   end
 
+  ActiveSupport.on_load(:action_mailer) do
+    before_action { Registry.clear }
+
+    after_action do
+      ColumnsTrace.reporter.report("#{self.class.name}##{action_name}", Registry.created_records)
+    end
+  end
+
   ActiveSupport.on_load(:active_job) do
     before_perform { Registry.clear }
 
     after_perform do
       ColumnsTrace.reporter.report("#{self.class.name}#perform", Registry.created_records)
+    end
+  end
+
+  ActiveSupport.on_load(:action_mailer) do
+    before_action { Registry.clear }
+
+    after_action do
+      ColumnsTrace.reporter.report("#{self.class.name}##{action_name}", Registry.created_records)
     end
   end
 end
