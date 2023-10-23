@@ -25,7 +25,7 @@ module ColumnsTrace
     before_perform { Registry.clear }
 
     after_perform do
-      ColumnsTrace.reporter.report(self.class.name, Registry.created_records)
+      ColumnsTrace.reporter.report("#{self.class.name}#perform", Registry.created_records)
     end
   end
 end

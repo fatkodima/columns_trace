@@ -6,7 +6,7 @@ module ColumnsTrace
     def call(worker, _job, _queue)
       Registry.clear
       yield
-      ColumnsTrace.reporter.report(worker.class.name, Registry.created_records)
+      ColumnsTrace.reporter.report("#{worker.class.name}#perform", Registry.created_records)
     end
   end
 end
