@@ -14,7 +14,7 @@ class UserMailer < ActionMailer::Base
 
   def used_fields_email
     user = params[:user]
-    _projects = Project.all.map(&:inspect)
+    _projects = Project.all.map(&:attributes)
 
     mail(to: user.email) do |format|
       format.text { render plain: "Text" }

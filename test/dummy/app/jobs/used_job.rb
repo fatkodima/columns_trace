@@ -2,6 +2,6 @@
 
 class UsedJob < ActiveJob::Base
   def perform
-    User.first.inspect
+    User.first.attributes
   end
 end

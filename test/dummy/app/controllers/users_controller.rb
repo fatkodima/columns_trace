@@ -19,7 +19,7 @@ class UsersController < ActionController::Base
   # Single record with all used columns.
   def action3
     user = User.first
-    user.inspect
+    user.attributes
     head :ok
   end
 
