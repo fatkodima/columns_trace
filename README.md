@@ -25,7 +25,7 @@ $ bundle install
 
 ## Usage
 
-Hit a controller action or run `ActiveJob` (or `Sidekiq`) job, open `log/columns_trace.log`,
+Hit a controller or email action or run `ActiveJob` (or `Sidekiq`) job, open `log/columns_trace.log`,
 and see the output:
 
 ```
@@ -52,6 +52,18 @@ ImportProjectJob
   1 Project record: unused columns - "description", "avatar", "settings", "created_at",
   "updated_at"; used columns - "id", "user_id", "url"
   ↳ app/jobs/import_project_job.rb:24:in `perform'
+```
+
+### Tracing custom code
+
+To get columns usage in the custom code, you can manually wrap it by `ColumnsTrace.report`:
+
+```ruby
+task my_rake_task: :environment do
+  ColumnsTrace.report("my_rake_task") do
+    # do stuff
+  end
+end
 ```
 
 ## Configuration

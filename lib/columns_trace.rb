@@ -11,6 +11,23 @@ require_relative "columns_trace/railtie" if defined?(Rails)
 
 module ColumnsTrace
   class << self
+    # Manually trace columns usage in an arbitrary code.
+    #
+    # @param title [String] title of the reporting, e.g. controller action etc
+    #
+    # @example
+    #   task my_rake_task: :environment do
+    #     ColumnsTrace.report("my_rake_task") do
+    #       # do stuff
+    #     end
+    #   end
+    #
+    def report(title)
+      Registry.clear
+      yield
+      reporter.report(title, Registry.created_records)
+    end
+
     # @private
     attr_reader :ignored_models
 

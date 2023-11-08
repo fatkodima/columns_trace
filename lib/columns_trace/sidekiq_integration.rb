@@ -3,10 +3,8 @@
 module ColumnsTrace
   # @private
   class SidekiqMiddleware
-    def call(worker, _job, _queue)
-      Registry.clear
-      yield
-      ColumnsTrace.reporter.report("#{worker.class.name}#perform", Registry.created_records)
+    def call(worker, _job, _queue, &block)
+      ColumnsTrace.report("#{worker.class.name}#perform", &block)
     end
   end
 end

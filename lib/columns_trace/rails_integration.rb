@@ -14,34 +14,20 @@ module ColumnsTrace
   end
 
   ActiveSupport.on_load(:action_controller) do
-    before_action { Registry.clear }
-
-    after_action do
-      ColumnsTrace.reporter.report("#{self.class.name}##{action_name}", Registry.created_records)
+    around_action do |controller, action|
+      ColumnsTrace.report("#{controller.class.name}##{action_name}", &action)
     end
   end
 
   ActiveSupport.on_load(:action_mailer) do
-    before_action { Registry.clear }
-
-    after_action do
-      ColumnsTrace.reporter.report("#{self.class.name}##{action_name}", Registry.created_records)
+    around_action do |mailer, action|
+      ColumnsTrace.report("#{mailer.class.name}##{action_name}", &action)
     end
   end
 
   ActiveSupport.on_load(:active_job) do
-    before_perform { Registry.clear }
-
-    after_perform do
-      ColumnsTrace.reporter.report("#{self.class.name}#perform", Registry.created_records)
-    end
-  end
-
-  ActiveSupport.on_load(:action_mailer) do
-    before_action { Registry.clear }
-
-    after_action do
-      ColumnsTrace.reporter.report("#{self.class.name}##{action_name}", Registry.created_records)
+    around_perform do |job, perform|
+      ColumnsTrace.report("#{job.class.name}#perform", &perform)
     end
   end
 end
