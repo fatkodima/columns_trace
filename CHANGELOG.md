@@ -1,5 +1,7 @@
 ## master (unreleased)
 
+## 0.3.0 (2023-11-09)
+
   - Add ability to trace columns usage in custom code
   - Trace unused columns in mailers
 
