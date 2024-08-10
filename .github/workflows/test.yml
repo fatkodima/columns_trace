@@ -10,7 +10,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7
+          ruby-version: 3.3
           bundler-cache: true
       - run: bundle exec rubocop
 
@@ -19,18 +19,27 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        gemfile:
-          - activerecord_60.gemfile
-          - activerecord_61.gemfile
-          - activerecord_70.gemfile
-          - activerecord_71.gemfile
-          - activerecord_head.gemfile
+        include:
+          - ruby-version: 2.7
+            gemfile: activerecord_60.gemfile
+          - ruby-version: 2.7
+            gemfile: activerecord_61.gemfile
+          - ruby-version: 2.7
+            gemfile: activerecord_70.gemfile
+          - ruby-version: 2.7
+            gemfile: activerecord_71.gemfile
+          - ruby-version: 3.3
+            gemfile: activerecord_72.gemfile
+
+          # Test against latest versions just in case.
+          - ruby-version: 3.3
+            gemfile: activerecord_head.gemfile
     env:
       BUNDLE_GEMFILE: ${{ github.workspace }}/gemfiles/${{ matrix.gemfile }}
     steps:
       - uses: actions/checkout@v3
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7
+          ruby-version: ${{ matrix.ruby-version }}
           bundler-cache: true
       - run: bundle exec rake test
