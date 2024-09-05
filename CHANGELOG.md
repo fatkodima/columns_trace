@@ -1,5 +1,7 @@
 ## master (unreleased)
 
+## 0.3.1 (2024-09-05)
+
 - Do not override custom logger in railtie
 
 ## 0.3.0 (2023-11-09)
