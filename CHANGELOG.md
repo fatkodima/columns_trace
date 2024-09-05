@@ -1,5 +1,7 @@
 ## master (unreleased)
 
+- Do not override custom logger in railtie
+
 ## 0.3.0 (2023-11-09)
 
   - Add ability to trace columns usage in custom code
